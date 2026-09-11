@@ -508,6 +508,9 @@ td {
   padding: 13px 22px;
   white-space: nowrap;
   transition: background 0.1s;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 td strong { display: block; color: var(--foreground); font-size: 13px; font-weight: 600; }
@@ -648,8 +651,8 @@ tr:hover td { background: var(--surface-2); }
   border: 1px solid var(--gold-border);
 }
 .recommendation > div { flex: 1; }
-.recommendation strong { font-size: 13px; font-weight: 600; color: var(--foreground); }
-.recommendation p { margin: 4px 0 0; color: var(--secondary-text); font-size: 12px; }
+.recommendation strong { font-size: 13px; font-weight: 600; color: var(--foreground); white-space: normal; word-break: break-word; }
+.recommendation p { margin: 4px 0 0; color: var(--secondary-text); font-size: 12px; white-space: normal; word-break: break-word; }
 .recommendation p b { color: var(--green); }
 
 /* ══════════════════════════════════════════════
@@ -851,7 +854,7 @@ tr:hover td { background: var(--surface-2); }
 }
 .setting-row strong, .setting-row small { display: block; }
 .setting-row strong { font-size: 14px; font-weight: 600; color: var(--foreground); }
-.setting-row small  { margin-top: 5px; color: var(--muted-foreground); font-size: 12px; }
+.setting-row small  { margin-top: 5px; color: var(--muted-foreground); font-size: 12px; white-space: normal; word-break: break-word; overflow-wrap: break-word; }
 .setting-row input  { width: 18px; height: 18px; accent-color: var(--gold); }
 
 .settings-footer { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding-top: 18px; }

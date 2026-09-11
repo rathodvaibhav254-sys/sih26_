@@ -1624,29 +1624,7 @@ export default function RailMindDashboard() {
             </div>
           ))}
         </nav>
-        <div className="sim-controls">
-          <div className="sim-head">
-            <span className={`dot ${running ? "green" : "amber"}`} />
-            <div>
-              <strong>SIMULATION {running ? "RUNNING" : "PAUSED"}</strong>
-              <small>Speed multiplier · 1.0×</small>
-            </div>
-          </div>
-          <div className="sim-buttons">
-            <button
-              onClick={() => setRunning(!running)}
-              aria-label={running ? "Pause" : "Play"}
-            >
-              {running ? <Pause size={14} /> : <Play size={14} />}
-            </button>
-            <button
-              onClick={() => setRunning(true)}
-              aria-label="Reset simulation"
-            >
-              <RotateCcw size={14} />
-            </button>
-          </div>
-        </div>
+
       </aside>
       <main className="main">
         <header className="topbar">
@@ -1766,29 +1744,7 @@ export default function RailMindDashboard() {
             </div>
           ))}
         </nav>
-        <div className="sim-controls">
-          <div className="sim-head">
-            <span className={`dot ${running ? "green" : "amber"}`} />
-            <div>
-              <strong>SIMULATION {running ? "RUNNING" : "PAUSED"}</strong>
-              <small>Speed multiplier · 1.0×</small>
-            </div>
-          </div>
-          <div className="sim-buttons">
-            <button
-              onClick={() => setRunning(!running)}
-              aria-label={running ? "Pause" : "Play"}
-            >
-              {running ? <Pause size={14} /> : <Play size={14} />}
-            </button>
-            <button
-              onClick={() => setRunning(true)}
-              aria-label="Reset simulation"
-            >
-              <RotateCcw size={14} />
-            </button>
-          </div>
-        </div>
+
       </aside>
       <main className="main">
         <header className="topbar">
