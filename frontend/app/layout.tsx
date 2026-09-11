@@ -8,13 +8,13 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'dark',
-  themeColor: '#0a0a0a',
+  colorScheme: 'light',
+  themeColor: '#f5f4f0',
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" style={{ background: '#0a0a0a' }}>
+    <html lang="en" style={{ background: '#f5f4f0' }}>
       <body className="antialiased">{children}</body>
     </html>
   )
