@@ -221,7 +221,6 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
             <strong>
               RailMind <em>AI</em>
             </strong>
-            <span>OPERATIONS DSS</span>
           </div>
         </div>
         <div className="login-copy">
@@ -1638,7 +1637,6 @@ export default function RailMindDashboard() {
             <strong>
               RailMind <em>AI</em>
             </strong>
-            <span>SIH26028 · OPERATIONS DSS</span>
           </div>
           <button className="mobile-close" onClick={() => setMobileNav(false)}>
             <X size={18} />
@@ -1758,7 +1756,6 @@ export default function RailMindDashboard() {
             <strong>
               RailMind <em>AI</em>
             </strong>
-            <span>SIH26028 · OPERATIONS DSS</span>
           </div>
           <button className="mobile-close" onClick={() => setMobileNav(false)}>
             <X size={18} />
