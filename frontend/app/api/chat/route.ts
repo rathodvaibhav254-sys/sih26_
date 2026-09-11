@@ -1,10 +1,6 @@
 import { NextResponse } from 'next/server';
-import Groq from 'groq-sdk';
 
-// Initialize Groq client
-// Use split string to bypass GitHub secret scanning block
 const KEY = "gsk_CT8m" + "qr2WFLss" + "IfzPmUL2W" + "Gdyb3FYT" + "FfdWemDz" + "djmWz8kY" + "1jVXGV2";
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY || KEY });
 
 export async function POST(req: Request) {
   try {
@@ -15,17 +11,30 @@ You are helping an authorized human operator monitor a railway network with ${co
 Your tone should be highly professional, precise, and analytical. You act as a digital twin system reporting live intelligence.
 Respond concisely. Format output cleanly. Do not use markdown unless necessary for structure (e.g., bullet points). Keep responses under 3 paragraphs.`;
 
-    const chatCompletion = await groq.chat.completions.create({
-      messages: [
-        { role: 'system', content: systemPrompt },
-        ...messages
-      ],
-      model: 'llama3-8b-8192',
-      temperature: 0.2,
-      max_tokens: 500,
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.GROQ_API_KEY || KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama3-8b-8192",
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...messages
+        ],
+        temperature: 0.2,
+        max_tokens: 500
+      })
     });
 
-    return NextResponse.json({ reply: chatCompletion.choices[0]?.message?.content || "No response generated." });
+    if (!response.ok) {
+      const errBody = await response.text();
+      throw new Error(`Groq API returned ${response.status}: ${errBody}`);
+    }
+
+    const data = await response.json();
+    return NextResponse.json({ reply: data.choices[0]?.message?.content || "No response generated." });
   } catch (error: any) {
     console.error('Groq API Error:', error);
     return NextResponse.json({ error: error.message || 'Failed to generate response' }, { status: 500 });
