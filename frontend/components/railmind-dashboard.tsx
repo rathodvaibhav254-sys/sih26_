@@ -511,7 +511,7 @@ function Overview({
             </div>
           </div>
           <div className="network-map">
-            <NetworkMap />
+            <NetworkDiagram />
           </div>
         </Panel>
         <Panel
