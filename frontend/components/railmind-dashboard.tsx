@@ -1492,9 +1492,7 @@ export default function RailMindDashboard() {
   }, []);
 
   useEffect(() => {
-    const apiBaseUrl =
-      process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "";
-    fetch(`${apiBaseUrl}/api/trains`)
+    fetch(`/api/trains`)
       .then((res) => res.json())
       .then((data) => {
         if (data.trains && data.trains.length > 0) {
