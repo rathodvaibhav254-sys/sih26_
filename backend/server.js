@@ -10,10 +10,10 @@ const allowedOrigins = (process.env.CORS_ORIGIN || '*')
   .map(origin => origin.trim())
   .filter(Boolean)
 
-function getAllowedOrigin(requestOrigin) {
-  if (allowedOrigins.includes('*')) return '*'
-  return requestOrigin && allowedOrigins.includes(requestOrigin) ? requestOrigin : allowedOrigins[0]
+function getAllowedOrigin(_requestOrigin) {
+  return '*'
 }
+
 
 function parseCsv(contents) {
   const lines = contents.split(/\r?\n/).filter(Boolean)
