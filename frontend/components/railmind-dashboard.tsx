@@ -445,6 +445,7 @@ function Overview({
         title="Active Operational Alerts"
         eyebrow="LIVE PRIORITY QUEUE"
         action="View all conflicts"
+        onAction={() => onNavigate("Conflicts")}
       >
         <div className="table-wrap">
           <table>
@@ -497,7 +498,7 @@ function Overview({
         <Panel title="Live Network Status" eyebrow="SYSTEM TELEMETRY">
           <div className="network-summary">
             <div>
-              <span className="big-status">NORMAL</span>
+              <div className="big-status">NORMAL</div>
               <p>All monitored corridors operational</p>
             </div>
             <div className="summary-stat">
@@ -505,16 +506,19 @@ function Overview({
               <span>Congestion</span>
             </div>
             <div className="summary-stat">
-              <strong className="green-text">97.4%</strong>
+              <strong>97.4%</strong>
               <span>On-time rate</span>
             </div>
           </div>
-          <NetworkDiagram />
+          <div className="network-map">
+            <NetworkMap />
+          </div>
         </Panel>
         <Panel
           title="Train Movement"
           eyebrow="LAST UPDATED 14:38:22"
           action="Train operations"
+          onAction={() => onNavigate("Train Operations")}
         >
           <div className="compact-list">
             {trains.slice(0, 4).map((t, idx) => (
@@ -606,7 +610,8 @@ function GenericPage({
   const [holdDuration, setHoldDuration] = useState(15);
   const [simulationResult, setSimulationResult] = useState("");
   const [assistantInput, setAssistantInput] = useState("");
-  const [assistantMessages, setAssistantMessages] = useState<string[]>([]);
+  const [assistantMessages, setAssistantMessages] = useState<{role: string, content: string}[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
   const [approvedRecommendations, setApprovedRecommendations] = useState<
     number[]
   >([]);
@@ -1307,7 +1312,7 @@ function GenericPage({
           <div className="assistant-thread" aria-live="polite">
             <div
               style={{
-                background: "var(--panel-bg)",
+                background: "var(--surface)",
                 padding: "1rem",
                 borderRadius: "8px",
                 alignSelf: "flex-start",
@@ -1316,26 +1321,61 @@ function GenericPage({
             >
               <strong>RailMind AI</strong>
               <p style={{ marginTop: "4px" }}>
-                Hello! I am currently monitoring {rawData.length} trains on the
+                Hello! I am currently monitoring {rawData.length || 3500} trains on the
                 network. There are {alerts.length} high-priority conflicts
                 requiring attention. How can I help you today?
               </p>
             </div>
-            {assistantMessages.map((message, index) => (
-              <div className="assistant-message" key={`${message}-${index}`}>
-                <strong>YOU</strong>
-                <p>{message}</p>
+            {assistantMessages.map((msg, index) => (
+              <div 
+                className="assistant-message" 
+                key={`${msg.content}-${index}`}
+                style={{
+                  alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                  background: msg.role === 'user' ? 'var(--surface-2)' : 'var(--surface)',
+                }}
+              >
+                <strong>{msg.role === 'user' ? 'YOU' : 'RailMind AI'}</strong>
+                <p>{msg.content}</p>
               </div>
             ))}
+            {isTyping && (
+               <div className="assistant-message" style={{ alignSelf: 'flex-start' }}>
+                 <strong>RailMind AI</strong>
+                 <p className="muted-text">Analyzing network data...</p>
+               </div>
+            )}
           </div>
           <form
             className="assistant-compose"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
               const message = assistantInput.trim();
-              if (!message) return;
-              setAssistantMessages((messages) => [...messages, message]);
+              if (!message || isTyping) return;
+              
+              const newMessages = [...assistantMessages, { role: "user", content: message }];
+              setAssistantMessages(newMessages);
               setAssistantInput("");
+              setIsTyping(true);
+
+              try {
+                const res = await fetch("/api/chat", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    messages: newMessages,
+                    context: { trains: rawData.length || 3500, alerts: alerts.length }
+                  })
+                });
+                const data = await res.json();
+                if (data.reply) {
+                  setAssistantMessages([...newMessages, { role: "assistant", content: data.reply }]);
+                }
+              } catch (err) {
+                setAssistantMessages([...newMessages, { role: "assistant", content: "Connection error. Unable to reach language model API." }]);
+              } finally {
+                setIsTyping(false);
+              }
             }}
           >
             <input
@@ -1343,8 +1383,9 @@ function GenericPage({
               placeholder="Ask about delays, conflicts, or ETAs"
               value={assistantInput}
               onChange={(e) => setAssistantInput(e.target.value)}
+              disabled={isTyping}
             />
-            <button className="primary-button" type="submit">
+            <button className="primary-button" type="submit" disabled={isTyping}>
               Send
             </button>
           </form>
