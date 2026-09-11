@@ -1,10 +1,22 @@
-import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
-export const metadata: Metadata = { title: 'RailMind AI · Operations Decision Support', description: 'Railway traffic-control digital twin and dynamic ETA forecasting dashboard for SIH26028.', generator: 'v0.app' }
-export const viewport: Viewport = { colorScheme: 'light', themeColor: '#f7f8fa' }
+export const metadata: Metadata = {
+  title: 'RailMind · Operations Decision Support',
+  description: 'Railway traffic-control decision support platform with predictive delay intelligence, conflict detection, and what-if simulation for SIH 2026.',
+  icons: { icon: '/icon.svg', apple: '/apple-icon.png' },
+}
+
+export const viewport: Viewport = {
+  colorScheme: 'dark',
+  themeColor: '#0a0a0a',
+}
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" className="bg-[#f7f8fa]"><body className="antialiased">{children}{process.env.NODE_ENV === 'production' && <Analytics />}</body></html>
+  return (
+    <html lang="en" style={{ background: '#0a0a0a' }}>
+      <body className="antialiased">{children}</body>
+    </html>
+  )
 }
+
